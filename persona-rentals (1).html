@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Persona Rentals: a personality for every occasion</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap">
+<style>
+:root{--bg:#dfe8e4;--ink:#16213a;--card:#f7faf8;--accent:#3a3fd8;--hi:#ffd23f;--mute:#5b6a7a;--line:#16213a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1626;--ink:#e8eef6;--card:#18223a;--accent:#8e93ff;--hi:#ffd23f;--mute:#9aa8ba;--line:#e8eef6}}
+:root[data-theme="dark"]{--bg:#0f1626;--ink:#e8eef6;--card:#18223a;--accent:#8e93ff;--hi:#ffd23f;--mute:#9aa8ba;--line:#e8eef6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}
+main{max-width:680px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:clamp(2.2rem,9vw,3.6rem);line-height:.98;margin:8px 0 12px;font-weight:800;letter-spacing:-.03em}
+.sub{color:var(--mute);margin:0 0 22px;max-width:46ch}
+.ticket{background:var(--card);border:2px solid var(--line);border-radius:14px;overflow:hidden}
+.top{padding:18px 18px 8px}
+.name{font-size:clamp(1.6rem,6vw,2.2rem);font-weight:800;letter-spacing:-.02em;margin:0;line-height:1.1}
+.arch{color:var(--accent);font-weight:600;margin:2px 0 10px}
+.quote{font-size:1.1rem;margin:0 0 14px;padding-left:12px;border-left:4px solid var(--hi)}
+.stats{display:grid;gap:8px;margin:0 0 14px}
+.stat{display:grid;grid-template-columns:130px 1fr 38px;align-items:center;gap:8px;font-size:.92rem}
+.bar{height:10px;background:color-mix(in srgb,var(--ink) 12%,transparent);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .5s ease}
+.stat b{text-align:right;font-variant-numeric:tabular-nums}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:10px}
+@media(max-width:520px){.cols{grid-template-columns:1fr}.stat{grid-template-columns:110px 1fr 34px}}
+h3{font-size:.95rem;margin:0 0 4px}
+ul{margin:0;padding-left:18px;font-size:.92rem}
+.perf{border-top:2px dashed var(--line);margin:0 -2px;position:relative}
+.perf:before,.perf:after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--bg);border:2px solid var(--line)}
+.perf:before{left:-12px}.perf:after{right:-12px}
+.rent{padding:16px 18px 18px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 12px}
+.opts label{cursor:pointer}
+.opts input{position:absolute;opacity:0}
+.opts span{display:inline-block;border:2px solid var(--line);border-radius:999px;padding:6px 12px;font-size:.9rem}
+.opts input:checked+span{background:var(--ink);color:var(--bg)}
+.opts input:focus-visible+span,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.addon{display:flex;gap:8px;align-items:center;font-size:.92rem;margin:4px 0}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin:14px 0 10px;font-size:1.05rem}
+.total strong{font-size:1.8rem;letter-spacing:-.02em}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+button{font:inherit;font-weight:600;border:2px solid var(--line);border-radius:10px;padding:11px 16px;cursor:pointer;background:var(--card);color:var(--ink)}
+button.go{background:var(--accent);color:#fff;border-color:var(--accent);flex:1}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button.go{color:#0f1626}}
+button:active{transform:translateY(1px)}
+.fine{font-size:.78rem;color:var(--mute);margin:14px 0 0}
+.agree{display:none;margin-top:18px;background:var(--hi);color:#16213a;border:2px solid var(--line);border-radius:14px;padding:16px 18px}
+.agree.on{display:block}
+.agree h2{margin:0 0 6px;font-size:1.3rem}
+.agree p,.agree li{font-size:.92rem}
+.agree ol{padding-left:20px;margin:6px 0}
+.sig{margin-top:10px;font-weight:800;font-style:italic}
+</style>
+</head>
+<body>
+<main>
+<h1>Persona Rentals</h1>
+<p class="sub">Tired of being you? Borrow someone better suited to the occasion. Fully fictional, mildly accountable.</p>
+
+<section class="ticket" aria-live="polite">
+  <div class="top">
+    <h2 class="name" id="name"></h2>
+    <p class="arch" id="arch"></p>
+    <p class="quote" id="quote"></p>
+    <div class="stats" id="stats"></div>
+    <div class="cols">
+      <div><h3>Hobbies</h3><ul id="hobbies"></ul></div>
+      <div><h3>Known red flags</h3><ul id="flags"></ul></div>
+    </div>
+  </div>
+  <div class="perf"></div>
+  <div class="rent">
+    <h3>Rental period</h3>
+    <div class="opts" id="periods"></div>
+    <h3>Add-ons</h3>
+    <label class="addon"><input type="checkbox" data-p="5"> Confidence boost, +$5</label>
+    <label class="addon"><input type="checkbox" data-p="8"> Sarcasm filter removed, +$8</label>
+    <label class="addon"><input type="checkbox" data-p="12"> Insurance against awkward silences, +$12</label>
+    <div class="total"><span>Total</span><strong id="total">$0</strong></div>
+    <div class="btns">
+      <button id="reroll" type="button">Generate another</button>
+      <button id="rent" class="go" type="button">Rent this personality</button>
+    </div>
+    <p class="fine">Persona Rentals is a joke. No personalities were harmed, transferred or actually billed.</p>
+  </div>
+</section>
+
+<section class="agree" id="agree" aria-live="polite" tabindex="-1">
+  <h2>Rental confirmed</h2>
+  <p id="summary"></p>
+  <ol id="terms"></ol>
+  <p class="sig" id="sig"></p>
+</section>
+</main>
+
+<script>
+(function(){
+var R=function(a){return a[Math.floor(Math.random()*a.length)]};
+var shuffle=function(a){return a.slice().sort(function(){return Math.random()-.5})};
+var first=["Chad","Brenda","Maximilian","Doreen","Kevin","Priya","Giuseppe","Tiffany","Barnaby","Colette","Dwayne","Ottoline","Reginald","Marisol","Todd"];
+var last=["Thunderpants","McGillicuddy","Von Spreadsheet","Fitzgerald-Banks","Moonbeam","Overshare","Crumpet","Deadlift","Pennywhistle","Backhand","Quibble","Nightshift","Sourdough"];
+var arch=["The Main Character","The Group Chat Lurker","The Motivational Poster","The Retired Pirate","The Passive-Aggressive Houseplant","The Corporate Philosopher","The Overconfident Intern","The Medieval Bard","The Podcast Guest","The Raccoon in a Trench Coat","The Villain Who Is Just Misunderstood","The Lifelong Substitute Teacher"];
+var quotes=["I don’t have a problem, I have a vision and a calendar invite.","Let’s circle back to my feelings.","Technically, I’m not late. The time is early.","I’ve read the terms and conditions. All of them. Twice.","You’re not wrong, you’re just not me.","My therapist says I should say ‘no’ more. No.","I’d love to help, but I’m emotionally booked.","Everything happens for a reason, and the reason is usually me.","I peaked in a parking lot in 2014.","Be the change you want to see in the group chat."];
+var traits=["Charisma","Chaos","Punctuality","Mystery","Snack Awareness","Emotional Range","Bluntness","Dad Energy","Dramatic Flair","Eye Contact","Humility","Plot Armor"];
+var hobbies=["Alphabetizing spices","Aggressive stretching","Dramatic readings of receipts","Rating sandwiches","Competitive napping","Collecting hotel soaps","Narrating nature documentaries","Arguing with GPS voices","Yelling at clouds, professionally","Making spreadsheets for fun","Unsolicited life coaching","Whittling, but badly"];
+var flags=["Will cry at a good commercial","Says ‘per my last email’ in person","Has opinions on fonts","Refuses to split the bill evenly","Introduces self in third person","Thinks every problem needs a podcast","Talks to birds, expects replies","Owns a single, very expensive blender","Narrates own actions","Never fully commits to a chair"];
+var periods=[["One hour",9],["Weekend",49],["One week",129],["Until Friday",79],["Mercury retrograde",199]];
+var cur=null,period=0;
+
+function gen(){
+  var t=shuffle(traits).slice(0,5).map(function(n){return [n,Math.floor(Math.random()*101)]});
+  cur={name:R(first)+" "+R(last),arch:R(arch),quote:R(quotes),traits:t,hobbies:shuffle(hobbies).slice(0,3),flags:shuffle(flags).slice(0,3)};
+  render();
+}
+function render(){
+  document.getElementById("name").textContent=cur.name;
+  document.getElementById("arch").textContent=cur.arch;
+  document.getElementById("quote").textContent="“"+cur.quote+"”";
+  var s=document.getElementById("stats");s.innerHTML="";
+  cur.traits.forEach(function(t){
+    var d=document.createElement("div");d.className="stat";
+    d.innerHTML='<span></span><div class="bar"><i></i></div><b></b>';
+    d.children[0].textContent=t[0];d.children[2].textContent=t[1];s.appendChild(d);
+    requestAnimationFrame(function(){requestAnimationFrame(function(){d.querySelector("i").style.width=t[1]+"%"})});
+  });
+  fill("hobbies",cur.hobbies);fill("flags",cur.flags);
+  price();
+}
+function fill(id,arr){var u=document.getElementById(id);u.innerHTML="";arr.forEach(function(x){var l=document.createElement("li");l.textContent=x;u.appendChild(l)})}
+function addons(){var n=0;document.querySelectorAll(".addon input").forEach(function(c){if(c.checked)n+=+c.dataset.p});return n}
+function price(){document.getElementById("total").textContent="$"+(periods[period][1]+addons())}
+
+var pe=document.getElementById("periods");
+periods.forEach(function(p,i){
+  var l=document.createElement("label");
+  l.innerHTML='<input type="radio" name="per"'+(i===0?" checked":"")+'><span></span>';
+  l.querySelector("span").textContent=p[0]+" · $"+p[1];
+  l.querySelector("input").addEventListener("change",function(){period=i;price()});
+  pe.appendChild(l);
+});
+document.querySelectorAll(".addon input").forEach(function(c){c.addEventListener("change",price)});
+document.getElementById("reroll").addEventListener("click",function(){
+  document.getElementById("agree").classList.remove("on");gen();
+});
+document.getElementById("rent").addEventListener("click",function(){
+  var a=document.getElementById("agree");
+  var ad=[];document.querySelectorAll(".addon input").forEach(function(c){if(c.checked)ad.push(c.parentNode.textContent.split(",")[0].trim().toLowerCase())});
+  document.getElementById("summary").textContent="You are now "+cur.name+", "+cur.arch.toLowerCase()+", for "+periods[period][0].toLowerCase()+". Total charged: $"+(periods[period][1]+addons())+" in imaginary money."+(ad.length?" Extras: "+ad.join(", ")+".":"");
+  var terms=["Return the personality in the condition you found it. Minor quirks are normal wear and tear.","You may not use "+cur.name.split(" ")[0]+" to win arguments, impress in-laws or enter a spelling bee.","Catchphrase use is mandatory at least once per hour.","Late returns incur a fee of one awkward hug.","Persona Rentals is not liable for sudden confidence, new friends or mild embarrassment."];
+  var o=document.getElementById("terms");o.innerHTML="";
+  terms.forEach(function(t){var l=document.createElement("li");l.textContent=t;o.appendChild(l)});
+  document.getElementById("sig").textContent="Signed, "+cur.name+" (probably)";
+  a.classList.add("on");a.scrollIntoView({behavior:"smooth",block:"nearest"});a.focus({preventScroll:true});
+});
+gen();
+})();
+</script>
+</body>
+</html>
